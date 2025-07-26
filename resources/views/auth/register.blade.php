@@ -53,6 +53,8 @@
             <x-input-error :messages="$errors->get('constituency')" class="mt-2" />
         </div>
 
+<!-- Hidden Role -->
+<input type="hidden" name="role" value="citizen">
 
 
         <div class="flex items-center justify-end mt-4">
