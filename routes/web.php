@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,5 +21,9 @@ Route::middleware('auth')->group(function () {
 
 //user routes
 Route::resource('user', UserController::class);
+
+//report route
+Route::resource('report', ReportController::class);
+Route::get('report-stats',[ReportController::class,'getReportStats'])->name('report.stats');
 
 require __DIR__.'/auth.php';
