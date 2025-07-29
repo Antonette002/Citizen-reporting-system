@@ -9,6 +9,15 @@ use App\Models\Report;
 
 class ReportController extends Controller
 {
+
+    public function index()
+{
+    
+    $reports = Report::orderBy('created_at', 'desc')->get();
+
+    return view('report.index', compact('reports'));
+}
+
     
     public function getReportStats()
     {
@@ -43,6 +52,32 @@ class ReportController extends Controller
 );
 
 }
+
+//data store method
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'description' => 'required|string|max:1000',
+        'category' =>'required','garbage', 'blocked_drainage', 'potholes', 'floods', 'illegal_settlement', 'unauthorized_construction', 'other',
+        'image_path' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'latitude' => 'required|numeric|between:-90,90',
+        'longitude' => 'required|numeric|between:-180,180',
+        'status' => 'in:pending', 
+    ]);
+
+    // Handle image upload if present
+    if ($request->hasFile('image_path')) {
+        $imagePath = $request->file('image_path')->store('report_images', 'public');
+        $validated['image_path'] = $imagePath;
+    }
+
+    $validated['user_id'] = auth()->id();
+
+    Report::create($validated);
+
+    return redirect()->back()->with('success', 'Issue reported successfully!');
+}
+
 
 
 
